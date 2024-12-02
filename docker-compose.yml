@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  frontend:
+    build:
+      context: ./apartments-listing-fe
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: "http://backend:8080/api"
+
+  backend:
+    build:
+      context: ./apartments-listing-be
+    ports:
+      - "8080:8080"
+    environment:
+      SUPABASE_URL: https://wdvzrfzssufibbblnpgl.supabase.co
+      SUPABASE_API_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkdnpyZnpzc3VmaWJiYmxucGdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzMwODk1NzIsImV4cCI6MjA0ODY2NTU3Mn0.7nWMQOmKH41-EitqEUD4puD9UZEu-Oqm7QkILfyLLJg
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - supabase_db:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  supabase_db:
+    driver: local
